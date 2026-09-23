@@ -1,0 +1,87 @@
+
+[
+    {
+        "name": "Albania",
+        "flag": "🇦🇱",
+        "code": "AL",
+        "dial_code": "+355",
+        "currency": "Albanian Lek",
+        "currency_symbol": "€",
+        "decimal_separator": ",",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    },
+    {
+        "name": "Andorra",
+        "flag": "🇦🇩",
+        "code": "AD",
+        "dial_code": "+376",
+        "currency": "Euro",
+        "currency_symbol": "€",
+        "decimal_separator": ",",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    },
+    {
+        "name": "Australia",
+        "flag": "🇦🇺",
+        "code": "AU",
+        "dial_code": "+61",
+        "currency": "Australian Dollar",
+        "currency_symbol": "$",
+        "decimal_separator": ".",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    },
+    {
+        "name": "Canada",
+        "flag": "🇨🇦",
+        "code": "CA",
+        "dial_code": "+1",
+        "currency": "Canadian Dollar",
+        "currency_symbol": "$",
+        "decimal_separator": ".",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    },
+    {
+        "name": "Spain",
+        "flag": "🇪🇸",
+        "code": "ES",
+        "dial_code": "+34",
+        "currency": "Euro",
+        "currency_symbol": "€",
+        "decimal_separator": ",",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    },
+    {
+        "name": "Sweden",
+        "flag": "🇸🇪",
+        "code": "SE",
+        "dial_code": "+46",
+        "currency": "Euro",
+        "currency_symbol": "€",
+        "decimal_separator": ",",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    },
+    {
+        "name": "Switzerland",
+        "flag": "🇨🇭",
+        "code": "CH",
+        "dial_code": "+41",
+        "currency": "Euro",
+        "currency_symbol": "€",
+        "decimal_separator": ",",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "other"
+    }
+]

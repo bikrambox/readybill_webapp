@@ -1,0 +1,26 @@
+[
+    {
+        "name": "India",
+        "flag": "🇮🇳",
+        "code": "IN",
+        "dial_code": "+91",
+        "currency": "Indian Rupee",
+        "currency_symbol": "₹",
+        "decimal_separator": ".",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "asia"
+    },
+    {
+        "name": "UAE",
+        "flag": "🇦🇪",
+        "code": "AE",
+        "dial_code": "+971",
+        "currency": "UAE Dirham",
+        "currency_symbol": "AED",
+        "decimal_separator": ",",
+        "national_language": "Arabic",
+        "language_short_code": "ar",
+        "region": "asia"
+    }
+]

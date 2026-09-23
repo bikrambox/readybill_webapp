@@ -1,0 +1,107 @@
+/* Hero Section Styles */
+.rb-hero-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.rb-hero-title {
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.rb-hero-text {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.rb-feature-badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.rb-hero-actions button {
+  min-width: 160px;
+}
+
+/* Hero Image */
+.rb-hero-image-wrapper {
+  perspective: 1000px;
+}
+
+.rb-image-card {
+  border-radius: 1.5rem;
+  overflow: hidden;
+  /* transform: rotateY(-5deg) rotateX(2deg); */
+  transition: transform 0.5s ease;
+}
+
+.rb-image-card:hover {
+  /* transform: rotateY(0deg) rotateX(0deg); */
+}
+
+.rb-image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.rb-analytics-badge {
+  bottom: 20px;
+  left: 20px;
+  /* animation: rb-float 3s ease-in-out infinite; */
+}
+
+.rb-badge-subtitle {
+  font-size: 0.75rem;
+}
+
+@keyframes rb-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 991px) {
+  .rb-hero-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  
+  .rb-hero-title {
+    font-size: 2rem;
+  }
+  
+  .rb-image-card {
+    transform: none;
+  }
+  
+  .rb-hero-actions {
+    flex-direction: column;
+  }
+  
+  .rb-hero-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .rb-hero-title {
+    font-size: 1.75rem;
+  }
+  
+  .rb-analytics-badge {
+    left: 10px;
+    bottom: 10px;
+  }
+  
+  .rb-analytics-badge .badge {
+    padding: 0.5rem !important;
+    font-size: 0.75rem;
+  }
+}

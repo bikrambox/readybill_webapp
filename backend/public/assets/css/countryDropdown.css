@@ -1,0 +1,158 @@
+ /* REGISTRATION PAGE COUNTRY CODE */
+        /* Custom Input Group */
+        .custom-input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ced4da;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s ease-in-out, border 0.2s ease-in-out;
+        }
+
+        .custom-input-group:focus-within {
+            box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.15);
+            border-color: #80bdff;
+            /* Bootstrap primary focus color */
+        }
+
+        /* Country Code Dropdown */
+        .custom-select-wrapper {
+            flex: 0 0 90px;
+            background: #f8f9fa;
+            border-right: 1px solid #ced4da;
+        }
+
+        .country-code-select {
+            width: 100%;
+            height: 50px;
+            border: none;
+            padding: 10px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #495057;
+            outline: none;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .country-code-select:hover {
+            background: #e9ecef;
+        }
+
+        .country-code-select:focus {
+            box-shadow: none;
+            background: #dee2e6;
+        }
+
+        /* Mobile Input Field */
+        .form-control-lg {
+            border: none;
+            padding-left: 15px;
+            height: 50px;
+            font-size: 1rem;
+            color: #495057;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .form-control-lg:focus {
+            box-shadow: none;
+            border-color: #80bdff;
+        }
+
+        /* Select2 Dropdown Enhancements */
+        .select2-container .select2-dropdown {
+            min-width: 300px !important;
+            max-height: 400px !important;
+            overflow-y: auto !important;
+            border-radius: 0.5rem;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Dropdown Options */
+        .select2-results__option {
+            padding: 10px 15px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            min-height: 45px;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .select2-results__option:hover {
+            background: #f1f3f5;
+        }
+
+        /* Flag & Text Alignment */
+        .select2-option img {
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        /* Ensuring Select2 Height Matches Input */
+        .select2-container .select2-selection--single {
+            height: 50px !important;
+            border-radius: 0.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            padding-left: 10px !important;
+            font-size: 1rem !important;
+            color: #495057 !important;
+            background: #f8f9fa !important;
+            border: 1px solid #ced4da !important;
+            transition: border-color 0.2s ease-in-out !important;
+        }
+
+        .select2-container .select2-selection--single:focus {
+            border-color: #80bdff;
+        }
+
+
+     
+        
+        .modal .custom-select-wrapper {
+            position: relative;
+        }
+        
+        .modal .country-code-select {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%);
+            z-index: 1055 !important; /* Must be higher than modal */
+            background: white;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            width: auto;
+        }
+        
+
+        .modal-backdrop {
+            z-index: 1049 !important; /* Lower than the dropdown */
+        }
+        
+        .modal {
+            z-index: 1050 !important;
+        }
+        
+        .modal .modal-dialog {
+            z-index: 1051 !important;
+        }
+        
+        .modal .modal-content {
+            z-index: 1052 !important;
+        }
+        
+        .modal .country-code-select {
+            z-index: 1060 !important; /* Higher than everything else */
+        }
+
+        /* REGISTRATION PAGE COUNTRY CODE */
+
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            margin-top:8px !important;    
+        }

@@ -1,0 +1,11 @@
+{
+    "name": "GroceryGermany",
+    "alias": "grocerygermany",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GroceryGermany\\Providers\\GroceryGermanyServiceProvider"
+    ],
+    "files": []
+}

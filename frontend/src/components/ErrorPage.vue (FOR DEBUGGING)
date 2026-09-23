@@ -1,0 +1,236 @@
+<template>
+  <div class="error-page-wrapper position-fixed top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+          <div class="card border-0 shadow-lg error-card">
+            <div class="card-body p-4 p-sm-5 text-center">
+              
+              <!-- Error Icon -->
+              <div class="mb-4 error-icon">
+                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+              </div>
+
+              <!-- Error Code -->
+              <h1 class="display-4 fw-bold text-danger mb-3">
+                {{ errorCode }}
+              </h1>
+
+              <!-- Error Title -->
+              <h2 class="h4 fw-semibold text-dark mb-3">
+                {{ errorTitle }}
+              </h2>
+
+              <!-- Error Message -->
+              <p class="text-muted fs-6 mb-4">
+                {{ errorMessage }}
+              </p>
+
+              <!-- Show Details Button -->
+              <div v-if="errorDetails" class="mb-4">
+                <button 
+                  class="btn btn-outline-secondary rounded-pill px-4"
+                  @click="showDetails = !showDetails"
+                >
+                  <i :class="showDetails ? 'bi bi-chevron-up' : 'bi bi-info-circle'" class="me-2"></i>
+                  {{ showDetails ? 'Hide' : 'Show' }} Technical Details
+                </button>
+
+                <!-- Error Details -->
+                <div v-show="showDetails" class="mt-3">
+                  <div class="alert alert-danger text-start mb-0">
+                    <h6 class="alert-heading fw-semibold">
+                      <i class="bi bi-bug-fill me-2"></i>Technical Details:
+                    </h6>
+                    <pre class="details-pre mb-0 small">{{ errorDetails }}</pre>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-4">
+                <button 
+                  v-if="showRetry"
+                  class="btn btn-primary btn-lg rounded-pill px-4"
+                  @click="handleRetry"
+                >
+                  <i class="bi bi-arrow-clockwise me-2"></i>Try Again
+                </button>
+
+                <a 
+                  :href="homeUrl"
+                  class="btn btn-outline-primary btn-lg rounded-pill px-4"
+                >
+                  <i class="bi bi-house-door me-2"></i>Go Home
+                </a>
+              </div>
+
+              <!-- Footer -->
+              <div class="border-top pt-4 mt-4">
+                <p class="text-muted small mb-2">
+                  Need help? 
+                  <a href="/contact" class="text-decoration-none fw-semibold">Contact Support</a>
+                </p>
+                <p class="text-secondary small mb-0">
+                  Error ID: {{ errorId }}
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+  errorCode: {
+    type: [String, Number],
+    default: 'ERROR'
+  },
+  errorTitle: {
+    type: String,
+    default: 'Something Went Wrong'
+  },
+  errorMessage: {
+    type: String,
+    default: 'We encountered an unexpected error. Please try again or contact support if the problem persists.'
+  },
+  errorDetails: {
+    type: String,
+    default: null
+  },
+  showRetry: {
+    type: Boolean,
+    default: true
+  },
+  homeUrl: {
+    type: String,
+    default: '/'
+  }
+})
+
+const emit = defineEmits(['retry'])
+
+const showDetails = ref(false)
+const errorId = computed(() => Date.now())
+
+const handleRetry = () => {
+  showDetails.value = false
+  emit('retry')
+}
+</script>
+
+<style scoped>
+/* Minimal custom CSS - mostly Bootstrap 5 */
+
+.error-page-wrapper {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 9999;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.error-card {
+  border-radius: 1.25rem;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon i {
+  font-size: 5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.details-pre {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Smooth transitions */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 575.98px) {
+  .error-icon i {
+    font-size: 3.5rem;
+  }
+  
+  .error-card {
+    border-radius: 1rem;
+  }
+  
+  .details-pre {
+    font-size: 0.75rem;
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 375px) {
+  .error-icon i {
+    font-size: 3rem;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-height: 600px) and (orientation: landscape) {
+  .error-page-wrapper {
+    padding: 1rem 0;
+  }
+  
+  .error-card .card-body {
+    padding: 1.5rem !important;
+  }
+  
+  .error-icon i {
+    font-size: 3rem;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+}
+</style>

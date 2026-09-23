@@ -1,0 +1,105 @@
+/* Footer Styles */
+.rb-footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.rb-footer-logo-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.rb-footer-description {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.rb-footer-heading {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.rb-footer-list {
+  margin: 0;
+  padding: 0;
+}
+
+.rb-footer-link {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.rb-footer-link:hover {
+  color: #ffffff;
+}
+
+.rb-footer-link-primary {
+  color: #0d6efd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.rb-footer-link-primary:hover {
+  color: #0b5ed7;
+}
+
+.rb-social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.rb-social-link {
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.rb-social-link:hover {
+  color: #0d6efd;
+  transform: translateY(-2px);
+}
+
+.rb-copyright {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.rb-partners {
+  flex-wrap: wrap;
+}
+
+.rb-partner-logo {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  color: #0f172a;
+  font-size: 1.2rem;
+}
+
+.rb-partner-logo:hover {
+  opacity: 1;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .rb-footer {
+    padding: 3rem 0 !important;
+  }
+  
+  .rb-footer-heading {
+    font-size: 0.95rem;
+  }
+  
+  .rb-footer-link {
+    font-size: 0.85rem;
+  }
+  
+  .rb-copyright {
+    font-size: 0.8rem;
+  }
+}

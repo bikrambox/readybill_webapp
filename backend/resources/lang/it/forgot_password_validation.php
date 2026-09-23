@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'required' => ':attribute is required to continue.',
+    'required_if' => ':attribute is required when :other is :value.',
+    'numeric' => ':attribute must be a number.',
+    'invalid' => ':attribute is invalid.',
+    'unique' => ':attribute is already registered.',
+    'string' => ':attribute must be a string.',
+    'min' => ':attribute must be at least :min characters.',
+    'confirmed' => ':attribute confirmation does not match.',
+    'digits_otp' => ':attribute must be a 6-digit number.',
+    'mobile_not_verified' => 'The mobile number is not verified. Please register again to continue.',
+    'otp_process_error' => 'Sorry! Unable to process the OTP.',
+    'user_id_invalid' => 'The selected user ID is invalid.',
+    'mobile_not_exist' => 'The mobile number does not exist.',
+    'mobile_already_registered' => 'The mobile number has already been registered.',
+    'country_code_invalid' => 'The country code is invalid.',
+    'mobile_country_mismatch' => 'The provided mobile number does not match our records.',
+    'user_not_found' => 'User not found.',
+    'invalid_input' => 'Invalid input.',
+    'attributes' => [
+        'mobile' => 'Mobile number',
+        'country_code' => 'Country code',
+        'password' => 'Password',
+        'shop_type' => 'Shop type',
+        'sms_type' => 'SMS type',
+        'otp' => 'OTP',
+        'type' => 'Request type',
+        'user_id' => 'User ID',
+    ],
+];

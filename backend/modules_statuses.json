@@ -1,0 +1,9 @@
+{
+    "Core": true,
+    "Authentication": true,
+    "GroceryIndia": true,
+    "Admin": true,
+    "CoreWeb": true,
+    "GroceryGermany": true,
+    "Agent": true
+}

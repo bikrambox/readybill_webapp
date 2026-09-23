@@ -1,0 +1,11 @@
+{
+    "name": "GroceryIndia",
+    "alias": "groceryindia",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GroceryIndia\\Providers\\GroceryIndiaServiceProvider"
+    ],
+    "files": []
+}

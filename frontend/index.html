@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="icon" href="src/assets/images/favicon/64.png"> -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="src/assets/images/favicon/16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="src/assets/images/favicon/32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="64x64"
+      href="src/assets/images/favicon/64.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="src/assets/images/favicon/512.png"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReadyBill</title>
+  </head>
+
+  <style>
+    /* Initial loader - shows immediately */
+    #initial-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #initial-loader .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #f0f0f0;
+      border-top: 6px solid #5ebe9b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Hide when Vue app is ready */
+    #app:not(:empty) ~ #initial-loader {
+      display: none;
+    }
+  </style>
+
+  <body>
+    <div id="app">
+      <!-- Initial loader - shown before Vue loads -->
+      <div id="initial-loader">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

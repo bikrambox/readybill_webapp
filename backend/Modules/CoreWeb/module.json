@@ -1,0 +1,11 @@
+{
+    "name": "CoreWeb",
+    "alias": "coreweb",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\CoreWeb\\Providers\\CoreWebServiceProvider"
+    ],
+    "files": []
+}

@@ -1,0 +1,97 @@
+/* Feature Card Styles */
+.rb-feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rb-feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.rb-feature-card:hover .card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.rb-icon-wrapper {
+  width: 80px;
+  height: 80px;
+}
+
+.rb-feature-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+/* Color Variations */
+.rb-bg-primary-light {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+.rb-text-primary {
+  color: #0d6efd;
+}
+
+.rb-bg-success-light {
+  background-color: rgba(45, 212, 191, 0.1);
+}
+
+.rb-text-success {
+  color: #2dd4bf;
+}
+
+.rb-bg-info-light {
+  background-color: rgba(13, 202, 240, 0.1);
+}
+
+.rb-text-info {
+  color: #0dcaf0;
+}
+
+.rb-bg-warning-light {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+.rb-text-warning {
+  color: #ffc107;
+}
+
+.rb-feature-card .card {
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.rb-feature-card .card-title {
+  color: #0f172a;
+  font-size: 1.125rem;
+}
+
+.rb-feature-card .card-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .rb-feature-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+  
+  .rb-icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .rb-feature-card .card-title {
+    font-size: 1rem;
+  }
+  
+  .rb-feature-card .card-text {
+    font-size: 0.875rem;
+  }
+}

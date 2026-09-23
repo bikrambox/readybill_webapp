@@ -1,0 +1,710 @@
+<?php
+
+namespace Modules\GroceryGermany\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
+
+use Modules\GroceryGermany\Helpers\ExcelHelpher;
+use Modules\GroceryGermany\Helpers\ItemHelpher;
+
+use Modules\Authentication\Entities\User;
+
+class FetchUploadedExcelDataJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $timeout = 600; // 5 minutes
+    public $tries = 5; // Retry 5 times
+
+    public $userId;
+    public $jobId;
+    protected $draw;
+    protected $start;
+    protected $length;
+    protected $searchValue;
+    protected $orderColumn;
+    protected $orderDirection;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct($userId, $jobId, $draw = 0, $start = 0, $length = 10, $searchValue = null, $orderColumn = null, $orderDirection = 'asc')
+    {
+        $this->userId = $userId;
+        $this->jobId = $jobId;
+        $this->draw = $draw;
+        $this->start = $start;
+        $this->length = $length;
+        $this->searchValue = $searchValue;
+        $this->orderColumn = $orderColumn;
+        $this->orderDirection = $orderDirection;
+    }
+
+    /**
+     * Execute the job.
+     */
+
+    // public function handle()
+    // {
+    //     try {
+    //         $this->updateProgress(10, __('validation.Starting data fetch') . '...');
+
+    //         // Validate user
+    //         $user = User::find($this->userId);
+    //         if (!$user) {
+    //             $this->cacheErrorResponse(__('validation.User not found'));
+    //             return;
+    //         }
+
+    //         $this->updateProgress(20, __('validation.Checking temporary table') . '...');
+
+    //         // Generate table name
+    //         $temp_table_name = ExcelHelpher::createTempTableName($this->userId);
+    //         $preferences = DB::connection($user->module_type)->table('preferences')->where('user_id', $this->userId)->first();
+    //         if (!$preferences) {
+    //             $this->cacheErrorResponse(__('validation.User preferences not found'));
+    //             return;
+    //         }
+
+    //         // Check if temporary table exists
+    //         if (!Schema::connection($user->module_type)->hasTable($temp_table_name)) {
+    //             $this->cacheErrorResponse(__('validation.No table found, returning empty data'));
+    //             return;
+    //         }
+
+    //         $this->updateProgress(30, __('validation.Building query') . '...');
+
+    //         // Build query
+    //         $query = DB::connection($user->module_type)->table($temp_table_name);
+    //         $totalRecords = $query->count();
+
+    //         $this->updateProgress(40, __('validation.Applying filters') . '...');
+
+    //         // Apply search filter
+    //         $filteredRecords = $totalRecords;
+    //         if (!empty($this->searchValue)) {
+    //             $query->where(function ($q) {
+    //                 $q->where('item_name', 'like', "%{$this->searchValue}%")
+    //                     ->orWhere('quantity', 'like', "%{$this->searchValue}%")
+    //                     ->orWhere('min_stock_alert', 'like', "%{$this->searchValue}%")
+    //                     ->orWhere('mrp', 'like', "%{$this->searchValue}%")
+    //                     ->orWhere('sale_price', 'like', "%{$this->searchValue}%")
+    //                     ->orWhere('short_unit', 'like', "%{$this->searchValue}%")
+    //                     ->orWhere('rate1', 'like', "%{$this->searchValue}%");
+    //             });
+    //             $filteredRecords = $query->count();
+    //         }
+
+    //         $this->updateProgress(50, 'Applying sorting...');
+
+    //         // Apply sorting
+    //         $columnMap = [
+    //             1 => 'item_name',
+    //             2 => 'quantity',
+    //             3 => 'min_stock_alert',
+    //             4 => 'mrp',
+    //             5 => 'sale_price',
+    //             6 => 'short_unit',
+    //             7 => 'rate1',
+    //         ];
+    //         if ($this->orderColumn && isset($columnMap[$this->orderColumn])) {
+    //             $query->orderBy($columnMap[$this->orderColumn], $this->orderDirection);
+    //         } else {
+    //             $query->orderBy('id', 'asc');
+    //         }
+
+    //         $this->updateProgress(60, __('validation.Applying pagination') . '...');
+
+    //         // Apply pagination
+    //         if ($this->length > 0) {
+    //             $query->offset($this->start)->limit($this->length);
+    //         }
+
+    //         $this->updateProgress(70, __('validation.Fetching data') . '...');
+
+    //         // Fetch data
+    //         $allData = $query->get();
+    //         $data = [];
+    //         $errors = ['coordinates' => [], 'grid_coordinates' => [], 'messages' => []];
+    //         $errorMap = [];
+
+    //         $this->updateProgress(80, __('validation.Validating data') . '...');
+
+    //         // Collect item names for validation
+    //         $itemNames = DB::connection($user->module_type)->table($temp_table_name)
+    //             ->pluck('item_name')
+    //             ->map(fn($name) => strtoupper(trim(ItemHelpher::checkSpecialCharacterFromString($name ?? 'New Item'))))
+    //             ->toArray();
+
+    //         // Process data
+    //         foreach ($allData as $key => $row) {
+    //             $rowArray = [
+    //                 'item_name' => $row->item_name ?? '',
+    //                 'quantity' => $row->quantity ?? '',
+    //                 'min_stock_alert' => $row->min_stock_alert ?? '',
+    //                 'mrp' => $row->mrp ?? '',
+    //                 'sale_price' => $row->sale_price ?? '',
+    //                 'unit' => $row->short_unit ?? '',
+    //                 'vat' => $row->rate1 ?? '',
+    //             ];
+
+    //             $validationResult = ExcelHelpher::validateRow($rowArray, $preferences, 0, $itemNames, $user);
+
+    //             if (!empty($validationResult['errors'])) {
+    //                 $errorMap[$key + $this->start] = $validationResult['errors'];
+    //             }
+
+    //             $data[] = [
+    //                 'original_index' => $key + $this->start,
+    //                 'item_name' => $row->item_name ?? '',
+    //                 'quantity' => $row->quantity ?? '',
+    //                 'min_stock_alert' => $row->min_stock_alert ?? '',
+    //                 'mrp' => $row->mrp ?? '',
+    //                 'sale_price' => $row->sale_price ?? '',
+    //                 'unit' => $row->short_unit ?? '',
+    //                 'vat' => $row->rate1 ?? '',
+    //                 'flag' => $validationResult['flag'],
+    //                 'id' => $row->id,
+    //             ];
+    //         }
+
+
+    //         // // **MODIFIED SECTION**: Sort data to show errors first (flag = 1), then rest (flag = 0)
+    //         // $data = collect($data)->sortByDesc('flag')->values()->toArray();
+
+
+    //         $this->updateProgress(90, __('validation.Generating errors') . '...');
+
+    //         // Generate errors
+    //         foreach ($data as $newIndex => $row) {
+    //             $originalIndex = $row['original_index'];
+
+    //             if (isset($errorMap[$originalIndex])) {
+    //                 foreach ($errorMap[$originalIndex] as $field => $errorMessage) {
+    //                     $errors['coordinates'][] = "items.$newIndex.$field";
+    //                     $errors['grid_coordinates'][] = sprintf("%02d,%02d", $newIndex, array_search($field, array_keys($row), true));
+    //                     if (!in_array($errorMessage, $errors['messages'])) {
+    //                         $errors['messages'][] = $errorMessage;
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+
+    //         // $status = empty($errorMap) ? 1 : 0;
+    //         $status = 1;
+    //         $message = empty($errorMap) ? __('validation.Data fetched successfully') : __('validation.Some rows contain errors');
+
+    //         $this->updateProgress(95, __('validation.Preparing response') . '...');
+
+    //         // Prepare response
+    //         $response = [
+    //             'draw' => intval($this->draw),
+    //             'recordsTotal' => $totalRecords,
+    //             'recordsFiltered' => $filteredRecords,
+    //             'data' => array_values($data),
+    //             'status' => $status,
+    //             'errors' => $errors,
+    //             'message' => $message,
+    //         ];
+
+    //         Cache::put("excel_fetch_result_{$this->userId}_{$this->jobId}", $response, now()->addMinutes(30));
+    //         $this->updateProgress(100, __('valiadtion.Data fetched successfully'), true);
+
+    //     } catch (\Exception $e) {
+    //         Log::error('FetchUploadedExcelDataJob failed', [
+    //             'user_id' => $this->userId,
+    //             'job_id' => $this->jobId,
+    //             'error' => $e->getMessage(),
+    //         ]);
+    //         $this->cacheErrorResponse(__('validation.An error occurred while fetching data') . ': ' . $e->getMessage());
+    //     }
+    // }
+
+
+    // public function handle()
+    // {
+    //     try {
+    //         $this->updateProgress(10, __('validation.Starting data fetch') . '...');
+
+    //         // Validate user
+    //         $user = User::find($this->userId);
+    //         if (!$user) {
+    //             $this->cacheErrorResponse(__('validation.User not found'));
+    //             return;
+    //         }
+
+    //         $this->updateProgress(20, __('validation.Checking temporary table') . '...');
+
+    //         // Generate table name
+    //         $temp_table_name = ExcelHelpher::createTempTableName($this->userId);
+    //         $preferences = DB::connection($user->module_type)->table('preferences')->where('user_id', $this->userId)->first();
+    //         if (!$preferences) {
+    //             $this->cacheErrorResponse(__('validation.User preferences not found'));
+    //             return;
+    //         }
+
+    //         // Check if temporary table exists
+    //         if (!Schema::connection($user->module_type)->hasTable($temp_table_name)) {
+    //             $this->cacheErrorResponse(__('validation.No table found, returning empty data'));
+    //             return;
+    //         }
+
+
+    //         $this->updateProgress(30, __('validation.Building query') . '...');
+
+
+    //         // Fetch all data from temp table with explicit column selection
+    //         $allData = DB::connection($user->module_type)->table($temp_table_name)
+    //             ->select([
+    //                 'id',
+    //                 'item_name',
+    //                 'quantity',
+    //                 'min_stock_alert',
+    //                 'mrp',
+    //                 'sale_price',
+    //                 'short_unit',
+    //                 'rate1',
+    //             ])
+    //             ->get();
+
+    //         // Collect item names for validation
+    //         $itemNames = DB::connection($user->module_type)->table($temp_table_name)
+    //             ->pluck('item_name')
+    //             ->map(fn($name) => strtoupper(trim(ItemHelpher::checkSpecialCharacterFromString($name ?? 'New Item'))))
+    //             ->toArray();
+
+    //         // Process data and check for errors
+    //         $data = [];
+    //         $errors = ['coordinates' => [], 'grid_coordinates' => [], 'messages' => []];
+    //         $errorMap = [];
+
+    //         $this->updateProgress(50, __('validation.Validating data') . '...');
+
+    //         foreach ($allData as $key => $row) {
+
+    //             $rowArray = [
+    //                 'item_name' => $row->item_name,
+    //                 'quantity' => $row->quantity,
+    //                 'min_stock_alert' => $row->min_stock_alert,
+    //                 'mrp' => $row->mrp,
+    //                 'sale_price' => $row->sale_price,
+    //                 'unit' => $row->short_unit,
+    //                 'vat' => $row->rate1,
+    //             ];
+
+    //             // Validate each row
+    //             $validationResult = ExcelHelpher::validateRow($rowArray, $preferences, '', $itemNames, $user);
+
+    //             // Update flag based on validation
+    //             $flag = !empty($validationResult['errors']) ? 1 : 0;
+
+    //             if (!empty($validationResult['errors'])) {
+    //                 $errorMap[$key] = $validationResult['errors'];
+    //             }
+
+    //             $data[] = [
+    //                 'original_index' => $key,
+    //                 'item_name' => $row->item_name,
+    //                 'quantity' => $row->quantity,
+    //                 'min_stock_alert' => $row->min_stock_alert,
+    //                 'mrp' => $row->mrp,
+    //                 'sale_price' => $row->sale_price,
+    //                 'unit' => $row->short_unit,
+    //                 'vat' => $row->rate1,
+    //                 'flag' => $flag,
+    //                 'id' => $row->id,
+    //             ];
+    //         }
+
+    //         // Get total records before filtering
+    //         $totalRecords = count($data);
+
+    //         $this->updateProgress(70, __('validation.Applying filters') . '...');
+
+    //         // Apply search filter if provided
+    //         $filteredData = $data;
+    //         if (!empty($searchValue)) {
+    //             $filteredData = array_filter($data, function ($row) use ($searchValue) {
+    //                 return stripos($row['item_name'], $searchValue) !== false ||
+    //                     stripos((string) $row['quantity'], $searchValue) !== false ||
+    //                     stripos((string) $row['min_stock_alert'], $searchValue) !== false ||
+    //                     stripos((string) $row['mrp'], $searchValue) !== false ||
+    //                     stripos((string) $row['sale_price'], $searchValue) !== false ||
+    //                     stripos($row['short_unit'], $searchValue) !== false ||
+    //                     stripos((string) $row['rate1'], $searchValue) !== false;
+    //             });
+    //             $filteredData = array_values($filteredData);
+    //         }
+
+
+    //         // Get filtered count
+    //         $filteredRecords = count($filteredData);
+
+
+    //         $this->updateProgress(80, 'Applying sorting...');
+
+    //         // Apply sorting
+    //         $columns = [
+    //             1 => 'item_name',
+    //             2 => 'quantity',
+    //             3 => 'min_stock_alert',
+    //             4 => 'mrp',
+    //             5 => 'sale_price',
+    //             6 => 'short_unit',
+    //             7 => 'rate1',
+    //         ];
+    //         // $orderColumnIndex = $request->input('order.0.column', 1);
+    //         // $orderDirection = $request->input('order.0.dir', 'asc');
+
+    //         $orderColumnIndex = $this->orderColumn ?? 1;
+    //         $orderDirection = $this->orderDirection ?? 'asc';
+
+    //         if (isset($columns[$orderColumnIndex])) {
+    //             usort($filteredData, function ($a, $b) use ($columns, $orderColumnIndex, $orderDirection) {
+    //                 $column = $columns[$orderColumnIndex];
+    //                 $valueA = $a[$column];
+    //                 $valueB = $b[$column];
+    //                 if ($orderDirection === 'asc') {
+    //                     return $valueA <=> $valueB;
+    //                 }
+    //                 return $valueB <=> $valueA;
+    //             });
+    //         }
+
+    //         // Always prioritize rows with errors (flag = 1) first
+    //         usort($filteredData, function ($a, $b) {
+    //             return $b['flag'] <=> $a['flag'];
+    //         });
+
+    //         $this->updateProgress(90, __('validation.Applying pagination') . '...');
+
+    //         // Apply pagination
+    //         $paginatedData = array_slice($filteredData, $this->start, $this->length);
+
+    //         // Update error coordinates based on paginated data
+    //         $newErrors = ['coordinates' => [], 'grid_coordinates' => [], 'messages' => []];
+
+    //         foreach ($paginatedData as $newIndex => $row) {
+    //             $originalIndex = $row['original_index'];
+
+    //             if (isset($errorMap[$originalIndex])) {
+    //                 foreach ($errorMap[$originalIndex] as $field => $errorMessage) {
+    //                     $newErrors['coordinates'][] = "items.$newIndex.$field";
+    //                     $newErrors['grid_coordinates'][] = sprintf("%02d,%02d", $newIndex, array_search($field, array_keys($row), true));
+
+    //                     if (!in_array($errorMessage, $newErrors['messages'])) {
+    //                         $newErrors['messages'][] = $errorMessage;
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         $status = empty($errorMap) ? 1 : 0;
+    //         $status = 1;
+
+    //         $message = empty($errorMap) ? "Data fetched successfully" : "Some rows contain errors";
+
+
+    //         $this->updateProgress(95, __('validation.Preparing response') . '...');
+
+    //         // Prepare response
+    //         $response = [
+    //             'draw' => intval($this->draw),
+    //             'recordsTotal' => $totalRecords,
+    //             'recordsFiltered' => $filteredRecords,
+    //             'data' => array_values($paginatedData),
+    //             'status' => $status,
+    //             'errors' => $newErrors,
+    //             'message' => $message,
+    //         ];
+
+    //         Cache::put("excel_fetch_result_{$this->userId}_{$this->jobId}", $response, now()->addMinutes(30));
+    //         $this->updateProgress(100, __('valiadtion.Data fetched successfully'), true);
+
+
+    //     } catch (\Exception $e) {
+    //         Log::error('FetchUploadedExcelDataJob failed', [
+    //             'user_id' => $this->userId,
+    //             'job_id' => $this->jobId,
+    //             'error' => $e->getMessage(),
+    //         ]);
+    //         $this->cacheErrorResponse(__('validation.An error occurred while fetching data') . ': ' . $e->getMessage());
+    //     }
+    // }
+
+
+
+    public function handle()
+    {
+        try {
+            // Progress key and data key are separate to avoid races
+            $progressKey = "excel_fetch_progress_{$this->userId}_{$this->jobId}";
+            $dataKey = "excel_fetch_result_{$this->userId}_{$this->jobId}";
+
+            $this->updateProgress(10, __('validation.Starting data fetch') . '...', false, $progressKey);
+
+            // Validate user
+            $user = User::find($this->userId);
+            if (!$user) {
+                $this->cacheErrorResponse(__('validation.User not found'));
+                return;
+            }
+
+            $this->updateProgress(20, __('validation.Checking temporary table') . '...', false, $progressKey);
+
+            $temp_table_name = ExcelHelpher::createTempTableName($this->userId);
+            $preferences = DB::connection($user->module_type)
+                ->table('preferences')
+                ->where('user_id', $this->userId)
+                ->first();
+
+            if (!$preferences) {
+                $this->cacheErrorResponse(__('validation.User preferences not found'));
+                return;
+            }
+
+            if (!Schema::connection($user->module_type)->hasTable($temp_table_name)) {
+                $this->cacheErrorResponse(__('validation.No table found, returning empty data'));
+                return;
+            }
+
+            $this->updateProgress(30, __('validation.Building query') . '...', false, $progressKey);
+
+            // Fetch minimal set
+            $allData = DB::connection($user->module_type)->table($temp_table_name)
+                ->select([
+                    'id',
+                    'item_name',
+                    'quantity',
+                    'min_stock_alert',
+                    'mrp',
+                    'sale_price',
+                    'short_unit',
+                    'rate1',
+                ])
+                ->get();
+
+            // Seed a first snapshot as quickly as possible (optional):
+            // Cache::put($dataKey, $this->makeSnapshotSkeleton(), now()->addMinutes(30));
+
+            $itemNames = DB::connection($user->module_type)->table($temp_table_name)
+                ->pluck('item_name')
+                ->map(fn($name) => strtoupper(trim(ItemHelpher::checkSpecialCharacterFromString($name ?? 'New Item'))))
+                ->toArray();
+
+            $data = [];
+            $errorMap = [];
+
+            $this->updateProgress(50, __('validation.Validating data') . '...', false, $progressKey);
+
+            foreach ($allData as $key => $row) {
+                $rowArray = [
+                    'item_name' => $row->item_name,
+                    'quantity' => $row->quantity,
+                    'min_stock_alert' => $row->min_stock_alert,
+                    'mrp' => $row->mrp,
+                    'sale_price' => $row->sale_price,
+                    'unit' => $row->short_unit,
+                    'vat' => $row->rate1,
+                ];
+
+                $validationResult = ExcelHelpher::validateRow($rowArray, $preferences, '', $itemNames, $user);
+                $flag = !empty($validationResult['errors']) ? 1 : 0;
+
+                if (!empty($validationResult['errors'])) {
+                    $errorMap[$key] = $validationResult['errors'];
+                }
+
+                $data[] = [
+                    'original_index' => $key,
+                    'id' => $row->id,
+                    'item_name' => $row->item_name,
+                    'quantity' => $row->quantity,
+                    'min_stock_alert' => $row->min_stock_alert,
+                    'mrp' => $row->mrp,
+                    'sale_price' => $row->sale_price,
+                    'unit' => $row->short_unit,
+                    'vat' => $row->rate1,
+                    'flag' => $flag,
+                ];
+            }
+
+            $totalRecords = count($data);
+
+            $this->updateProgress(70, __('validation.Applying filters') . '...', false, $progressKey);
+
+            $searchValue = $this->searchValue ?? null;
+            $orderColumnIndex = $this->orderColumn ?? 1;
+            $orderDirection = strtolower($this->orderDirection ?? 'asc') === 'desc' ? 'desc' : 'asc';
+
+            $filteredData = $data;
+            if (!empty($searchValue)) {
+                $needle = mb_strtolower($searchValue);
+                $filteredData = array_values(array_filter($data, function ($row) use ($needle) {
+                    return (isset($row['item_name']) && mb_stripos((string) $row['item_name'], $needle) !== false)
+                        || (isset($row['quantity']) && mb_stripos((string) $row['quantity'], $needle) !== false)
+                        || (isset($row['min_stock_alert']) && mb_stripos((string) $row['min_stock_alert'], $needle) !== false)
+                        || (isset($row['mrp']) && mb_stripos((string) $row['mrp'], $needle) !== false)
+                        || (isset($row['sale_price']) && mb_stripos((string) $row['sale_price'], $needle) !== false)
+                        || (isset($row['unit']) && mb_stripos((string) $row['unit'], $needle) !== false)
+                        || (isset($row['vat']) && mb_stripos((string) $row['vat'], $needle) !== false);
+                }));
+            }
+
+            $filteredRecords = count($filteredData);
+
+            $this->updateProgress(80, __('validation.Applying sorting') . '...', false, $progressKey);
+
+            $columns = [
+                1 => 'item_name',
+                2 => 'quantity',
+                3 => 'min_stock_alert',
+                4 => 'mrp',
+                5 => 'sale_price',
+                6 => 'unit',
+                7 => 'vat',
+            ];
+            $orderColumn = $columns[$orderColumnIndex] ?? 'item_name';
+
+            uasort($filteredData, function ($a, $b) use ($orderColumn, $orderDirection) {
+                if ($a['flag'] !== $b['flag']) {
+                    return $b['flag'] <=> $a['flag'];
+                }
+                $va = $a[$orderColumn] ?? null;
+                $vb = $b[$orderColumn] ?? null;
+                if (is_numeric($va) && is_numeric($vb)) {
+                    $cmp = $va <=> $vb;
+                } else {
+                    $cmp = mb_strtolower((string) $va) <=> mb_strtolower((string) $vb);
+                }
+                if ($orderDirection === 'desc') {
+                    $cmp = -$cmp;
+                }
+                if ($cmp !== 0) {
+                    return $cmp;
+                }
+                if (($a['id'] ?? 0) !== ($b['id'] ?? 0)) {
+                    return ($a['id'] ?? 0) <=> ($b['id'] ?? 0);
+                }
+                return ($a['original_index'] ?? 0) <=> ($b['original_index'] ?? 0);
+            });
+            $filteredData = array_values($filteredData);
+
+            $this->updateProgress(90, __('validation.Applying pagination') . '...', false, $progressKey);
+
+            $start = max(0, (int) ($this->start ?? 0));
+            $length = (int) ($this->length ?? 10);
+            $paginatedData = $length < 0 ? $filteredData : array_slice($filteredData, $start, $length);
+
+            $gridColumns = [
+                'item_name',
+                'quantity',
+                'min_stock_alert',
+                'mrp',
+                'sale_price',
+                'unit',
+                'vat',
+                'flag',
+                'id',
+                'original_index',
+            ];
+
+            $newErrors = ['coordinates' => [], 'grid_coordinates' => [], 'messages' => []];
+
+            foreach ($paginatedData as $newIndex => $row) {
+                $originalIndex = $row['original_index'];
+                if (isset($errorMap[$originalIndex])) {
+                    foreach ($errorMap[$originalIndex] as $field => $errorMessage) {
+                        $normalizedField = $field;
+                        if ($field === 'short_unit')
+                            $normalizedField = 'unit';
+                        if ($field === 'rate1')
+                            $normalizedField = 'vat';
+
+                        $newErrors['coordinates'][] = "items.$newIndex.$normalizedField";
+                        $colIdx = array_search($normalizedField, $gridColumns, true);
+                        $colIdx = ($colIdx === false) ? 0 : $colIdx;
+                        $newErrors['grid_coordinates'][] = sprintf("%02d,%02d", $newIndex, ($colIdx+1));
+
+                        if (!in_array($errorMessage, $newErrors['messages'], true)) {
+                            $newErrors['messages'][] = $errorMessage;
+                        }
+                    }
+                }
+            }
+
+            $status = 1;
+            $message = empty($errorMap) ? "Data fetched successfully" : "Some rows contain errors";
+
+            $this->updateProgress(95, __('validation.Preparing response') . '...', false, $progressKey);
+
+            // Final response snapshot (this is what the controller/consumer should read)
+            $response = [
+                'draw' => intval($this->draw),
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $filteredRecords,
+                'data' => array_values($paginatedData),
+                'status' => $status,
+                'errors' => $newErrors,
+                'message' => $message,
+            ];
+
+            // Write the final data snapshot
+            Cache::put($dataKey, $response, now()->addMinutes(30));
+
+            // Only now mark progress as 100% so clients switch to this snapshot
+            $this->updateProgress(100, __('valiadtion.Data fetched successfully'), true, $progressKey);
+        } catch (\Exception $e) {
+            Log::error('FetchUploadedExcelDataJob failed', [
+                'user_id' => $this->userId,
+                'job_id' => $this->jobId,
+                'error' => $e->getMessage(),
+            ]);
+            $this->cacheErrorResponse(__('validation.An error occurred while fetching data') . ': ' . $e->getMessage());
+        }
+    }
+
+
+
+    /**
+     * Cache an error response.
+     */
+    protected function cacheErrorResponse($message)
+    {
+        $response = [
+            'draw' => intval($this->draw),
+            'recordsTotal' => 0,
+            'recordsFiltered' => 0,
+            'data' => [],
+            'status' => 0,
+            'errors' => ['coordinates' => [], 'grid_coordinates' => [], 'messages' => [$message]],
+            'message' => $message,
+        ];
+
+        Cache::put("excel_fetch_result_{$this->userId}_{$this->jobId}", $response, now()->addMinutes(30));
+        $this->updateProgress(100, $message, false);
+    }
+
+    /**
+     * Update progress cache.
+     */
+    protected function updateProgress($percentage, $message, $success = null)
+    {
+        Cache::put("excel_fetch_progress_{$this->userId}_{$this->jobId}", [
+            'percentage' => $percentage,
+            'message' => $message,
+            'success' => $success,
+        ], now()->addMinutes(30));
+    }
+}

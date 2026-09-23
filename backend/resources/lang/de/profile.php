@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'required' => 'Das Feld :attribute wird benötigt, um fortzufahren.',
+    'numeric' => ':attribute muss eine Zahl sein.',
+    'exists' => ':attribute existiert nicht.',
+    'string' => ':attribute muss eine Zeichenkette sein.',
+    'max' => ':attribute darf nicht größer als :max Zeichen sein.',
+    'email' => ':attribute muss eine gültige E‑Mail‑Adresse sein.',
+    'invalid' => ':attribute ist ungültig.',
+    'image' => ':attribute muss ein Bild sein.',
+    'mimes' => ':attribute muss eine Datei des Typs :values sein.',
+    'boolean' => ':attribute muss wahr oder falsch sein.',
+    'email_already_registered' => 'Die E‑Mail‑Adresse ist bereits registriert.',
+    'required_non_admin' => ':attribute wird für Nicht‑Admin‑Benutzer benötigt.',
+    'validation_error' => 'Validierungsfehler!',
+    'attributes' => [
+        'user_id' => 'Benutzer-ID',
+        'name' => 'Name',
+        'email' => 'E‑Mail',
+        'address' => 'Adresse',
+        'shop_type' => 'Shop-Typ',
+        'gstin' => 'GSTIN',
+        'logo' => 'Logo',
+        'isLogoDelete' => 'Flag zum Löschen des Logos',
+        'photo' => 'Foto',
+        'isPhotoDelete' => 'Flag zum Löschen des Fotos',
+        'otp' => 'otp',
+    ],
+];

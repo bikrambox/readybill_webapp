@@ -1,0 +1,551 @@
+@extends('coreweb::layouts.groceryGermany')
+@section('title', "{{  __('support_page.title') }}")
+@section('content')
+
+    <div class="pagetitle">
+        <h1>{{  __('support_page.title') }}</h1>
+        <h6 style="color:#012970">{{  __('support_page.subtitle') }}</h6>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="home">{{  __('common.Home') }}</a></li>
+                <li class="breadcrumb-item active">{{  __('support_page.title') }}</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-8">
+                @include('coreweb::components/error', [
+                    'heading' => __('common.Subscription Alert'),
+                    'modalIdAttribute' => 'subscripitonErrorId',
+                ])
+            </div>
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+
+                            <div class="row mb-3">
+                                <div class="col-md-4 text-start">
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#askYourQuestionModal">
+                                        {{  __('support_page.ask_your_questions') }}
+                                    </button>
+                                </div>
+
+                                <div class="col-md-8 text-end">
+                                    <p>{{  __('support_page.contact_n_sale_support') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-1" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-1">
+                                        {!!  __('support_page.faq1.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-1" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingOne">
+                                    <div class="accordion-body">
+                                        <p class="text-break">{!!  __('support_page.faq1.para.1') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.2') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.3') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.4') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.5') !!}
+                                        </p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.6') !!}</p>
+
+                                        <p class="text-break">{!!  __('support_page.faq1.para.7') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.8') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.9') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq1.para.10') !!}</p>
+                                        <p class="text-break">
+                                            {!!  __('support_page.faq1.para.11') !!}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-2" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-2">
+                                       {!!  __('support_page.faq2.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-2" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingTwo">
+                                    <div class="accordion-body">
+                                        <p class="text-break">{!!  __('support_page.faq2.para.1') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq2.para.2') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq2.para.3') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq2.para.4') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq2.para.5') !!}</p>
+                                        <p class="text-break">{!!  __('support_page.faq2.para.6') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-3" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-3">
+                                        {!!  __('support_page.faq3.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-3" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingThree">
+                                    <div class="accordion-body">
+                                         <p class="text-break">{!!  __('support_page.faq3.para.1') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-4" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-4">
+                                        {!!  __('support_page.faq4.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-4" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFour">
+                                    <div class="accordion-body">
+                                         <p class="text-break">{!!  __('support_page.faq4.para.1') !!}</p>
+                                         <p class="text-break">{!!  __('support_page.faq4.para.2') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-5" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-5">
+                                        {!!  __('support_page.faq5.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-5" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFour">
+                                    <div class="accordion-body">
+                                         <p class="text-break">{!!  __('support_page.faq5.para.1') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-6" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-6">
+                                        {!!  __('support_page.faq6.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-6" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFour">
+                                    <div class="accordion-body">
+                                        <p class="text-break">{!!  __('support_page.faq6.para.1') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-7" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-7">
+                                        {!!  __('support_page.faq7.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-7" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFour">
+                                    <div class="accordion-body">
+                                        <p class="text-break">{!!  __('support_page.faq7.para.1') !!}</p>
+                                        <ol>
+                                            <li>
+                                                {!!  __('support_page.faq7.para.2') !!}
+                                            </li>
+                                            <li>
+                                                {!!  __('support_page.faq7.para.3') !!}
+                                            </li>
+                                            <li>
+                                                {!!  __('support_page.faq7.para.4') !!}
+                                            </li>
+                                            <li>
+                                                {!!  __('support_page.faq7.para.5') !!}
+                                            </li>
+                                            <li>
+                                                {!!  __('support_page.faq7.para.6') !!}
+                                            </li>
+
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-8" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-8">
+                                       {!!  __('support_page.faq8.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-8" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFive">
+
+                                    <div class="accordion-body">
+                                         <p class="text-break">{!!  __('support_page.faq8.para.1') !!}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-9" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-9">
+                                         {!!  __('support_page.faq9.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-9" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingSix">
+
+                                    <div class="accordion-body">
+                                        <p class="text-break">{!!  __('support_page.faq9.para.1') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingSeven">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-10" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-10">
+                                        {!!  __('support_page.faq10.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-10" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingSeven">
+
+                                    <div class="accordion-body">
+                                        <p class="text-break">{!!  __('support_page.faq10.para.1') !!}</p>
+                                    </div>
+                                </div>
+                            <v>
+
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingEight">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-11" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-11">
+                                        {!!  __('support_page.faq11.quest') !!}
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-11" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingEight">
+
+                                    <div class="accordion-body">
+                                         <p class="text-break">{!!  __('support_page.faq11.para.1') !!}</p>
+                                         <p class="text-break">{!!  __('support_page.faq11.para.2') !!}</p>
+                                         <p class="text-break">{!!  __('support_page.faq11.para.3') !!}</p>
+                                         <p class="text-break">{!!  __('support_page.faq11.para.4') !!}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ask you questions -->
+    @include('coreweb::modals.askYourQuestions')
+    @include('coreweb::modals.successMessage')
+
+@endsection
+
+
+@section('scripts')
+    @parent
+
+    <script>
+        $(document).ready(function () {
+
+            
+
+            var myModal = new bootstrap.Modal(document.getElementById('askYourQuestionModal'));
+            myModal._element.addEventListener('shown.bs.modal', function () {
+                $('#send-query').trigger('reset');
+                document.getElementById('title').focus();
+            });
+            myModal._element.addEventListener('hidden.bs.modal', function () {
+                resetCreateQueryForm();
+                $('#send-query').trigger('reset');
+            });
+
+
+            var myModal1 = new bootstrap.Modal(document.getElementById('successMessageModal'));
+            myModal1._element.addEventListener('hidden.bs.modal', function () {
+                $(".modal-backdrop").remove();
+            }); 
+
+
+            $('#send-query').submit(function (e) {
+                e.preventDefault();
+
+                var formData = new FormData();
+                formData.append('title', $('#title').val());
+                formData.append('description', $('#description').val());
+
+                if ($('#attachment')[0].files.length > 0) {
+                    formData.append('attachment', $('#attachment')[0].files[0]);
+                }
+
+                $.ajax({
+                    url: api_url + 'create-query',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $(".overlay").show();
+                    },
+                    success: function (response) {
+
+                        if (response) {
+                            console.log('item', response);
+                            $.toast({
+                                heading: 'Success',
+                                text: response.message,
+                                icon: 'success',
+                                loader: true,
+                                position: 'top-right',
+                                loaderBg: '#9EC600'
+                            });
+
+                            $('#send-query').trigger('reset');
+
+                            $("#askYourQuestionModal").modal('hide');
+
+                            $("#successMessage").text("Thank you for your query. We will review it and get back to you.");
+                            $("#successMessageModal").modal('show');
+
+                            $(".overlay").hide();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle the error response
+                        $(".overlay").hide();
+                        var error = JSON.parse(xhr.responseText);
+                        console.error(error);
+                        handleCreateQueriesErrors(error);
+                    }
+                });
+
+            });
+
+
+            function handleCreateQueriesErrors(error) {
+
+                resetCreateQueryForm();
+
+                $.each(error.data, function (key, value) {
+                    switch (key) {
+                        case 'title':
+                            $("#" + key).addClass('border border-2 border-danger');
+                            $("." + key + "-error").removeClass('d-none');
+                            $("." + key + "-error").text(value[0]);
+                            break;
+                        case 'description':
+                            $("#" + key).addClass('border border-2 border-danger');
+                            $("." + key + "-error").removeClass('d-none');
+                            $("." + key + "-error").text(value[0]);
+                            break;
+
+                        case 'attachment':
+                            $("#" + key).addClass('border border-2 border-danger');
+                            $("." + key + "-error").removeClass('d-none');
+                            $("." + key + "-error").text(value[0]);
+                            break;
+
+                        default:
+                            console.warn('Unhandled error key:', key);
+                            break;
+                    }
+                });
+            }
+
+            function resetCreateQueryForm() {
+                // Reset form fields
+                $("#title, #description, #attachement")
+                    .removeClass('border border-2 border-danger');
+                $(".title-error, .description-error, .attachment-error")
+                    .addClass('d-none');
+
+                    $("#attachmentFile").attr("src","");
+                    $("#attachmentFile").addClass("d-none");
+                    $("#attachment-clear-button").addClass("d-none");
+            }
+
+
+
+            // // When a file is selected
+            // $('#attachment').change(function () {
+
+            //     var file = this.files[0];
+
+            //     $("#attachmentFile").removeClass("d-none");
+            //     if (file) {
+            //         var reader = new FileReader();
+            //         reader.onload = function (e) {
+            //             // Set the source of the preview image to the data URL
+            //             $('#attachmentFile').attr('src', e.target.result);
+
+            //             // Once the image is loaded, set its size
+            //             $('#attachmentFile').on('load', function () {
+            //                 $(this).css({
+            //                     'max-width': '200px',
+            //                     'max-height': '100px'
+            //                 });
+            //             });
+            //         };
+
+            //         // Read the file as a data URL
+            //         reader.readAsDataURL(file);
+
+            //         $("#attachment-clear-button").removeClass("d-none");
+            //     }
+            // });
+
+            $('#attachment').change(function () {
+                var file = this.files[0];
+                var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'text/plain', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/rtf'];
+                var maxFileSize = 20 * 1024 * 1024; // 20 MB in bytes
+
+                // Clear previous modal error messages
+                $('#errorMessage').text('');
+                $('#attachment-clear-button').addClass("d-none");
+                $('#attachmentFile').addClass("d-none");
+                $(".askYourQuestionsSubmitButton").prop('disabled', false);
+
+                if (file) {
+                    // Validate file type
+                    if (!allowedTypes.includes(file.type)) {
+                        var errorMessage = 'Invalid file type. Allowed types are: JPEG, JPG, GIF, BMP, PNG, TXT, RTF, DOC, DOCX, PDF.';
+                        showErrorModal(errorMessage);
+                        return;
+                    }
+
+                    // Validate file size
+                    if (file.size > maxFileSize) {
+                        var errorMessage = 'File size exceeds 20 MB. Please upload a smaller file.';
+                        showErrorModal(errorMessage);
+                        return;
+                    }
+
+                    // // If validation passes, show the file preview
+                    // var reader = new FileReader();
+                    // reader.onload = function (e) {
+                    //     $('#attachmentFile').attr('src', e.target.result).removeClass("d-none");
+
+                    //     // Set its size once loaded
+                    //     $('#attachmentFile').on('load', function () {
+                    //         $(this).css({
+                    //             'max-width': '200px',
+                    //             'max-height': '100px'
+                    //         });
+                    //     });
+                    // };
+
+                    // If it's an image file, preview it
+                    if (file.type.startsWith('image/')) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#attachmentFile').attr('src', e.target.result).removeClass("d-none");
+
+                            // Set its size once loaded
+                            $('#attachmentFile').on('load', function () {
+                                $(this).css({
+                                    'max-width': '200px',
+                                    'max-height': '100px'
+                                });
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // If the file is not an image, show a default preview image
+                        $('#attachmentFile').attr('src', 'assets/img/file.png').removeClass("d-none");
+                        // Set its size once loaded
+                        $('#attachmentFile').on('load', function () {
+                            $(this).css({
+                                'max-width': '200px',
+                                'max-height': '100px'
+                            });
+                        });
+                    }
+
+                    // Read the file as a data URL
+                    // reader.readAsDataURL(file);
+
+                    // Show the clear button
+                    $('#attachment-clear-button').removeClass("d-none");
+                }
+            });
+
+            // Function to show the error message in a modal
+            function showErrorModal(message) {
+                // $('#errorMessage').text(message); // Set the error message
+                // $('#errorModal').modal('show'); // Show the modal
+                $(".attachment-error").text(message);
+                $(".attachment-error").removeClass("d-none");
+                $(".askYourQuestionsSubmitButton").prop('disabled', true);
+            }
+
+
+
+            // Function to clear the preview image and reset file input
+            function clearPreview() {
+                $('#attachmentFile').attr('src', ''); // Clear the image source
+                $('#attachment').val(''); // Reset the file input
+                $("#attachment-clear-button").addClass("d-none");
+
+                $("#attachmentFile").addClass("d-none");
+            }
+
+            // Clear button click event handler
+            $('#attachment-clear-button').click(function () {
+                clearPreview();
+            });
+
+
+            $('#askYourQuestionModal').on('hidden.bs.modal', function () {
+                $(".askYourQuestionsSubmitButton").prop('disabled', false);
+            });
+
+
+        });
+
+    </script>
+@endsection

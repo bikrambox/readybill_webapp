@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'required' => 'Das Feld :attribute wird benötigt, um fortzufahren.',
+    'required_if' => ':attribute wird benötigt, wenn :other :value ist.',
+    'numeric' => ':attribute muss eine Zahl sein.',
+    'invalid' => ':attribute ist ungültig.',
+    'unique' => ':attribute ist bereits registriert.',
+    'string' => ':attribute muss eine Zeichenkette sein.',
+    'min' => ':attribute muss mindestens :min Zeichen lang sein.',
+    'confirmed' => 'Die Bestätigung für :attribute stimmt nicht überein.',
+    'digits_otp' => ':attribute muss eine 6-stellige Zahl sein.',
+    'mobile_not_verified' => 'Die Handynummer ist nicht verifiziert. Bitte registrieren Sie sich erneut, um fortzufahren.',
+    'otp_process_error' => 'Entschuldigung! Das OTP konnte nicht verarbeitet werden.',
+    'user_id_invalid' => 'Die ausgewählte Benutzer-ID ist ungültig.',
+    'mobile_not_exist' => 'Die Handynummer existiert nicht.',
+    'mobile_already_registered' => 'Die Handynummer ist bereits registriert.',
+    'country_code_invalid' => 'Der Ländercode ist ungültig.',
+    'mobile_country_mismatch' => 'Die angegebene Handynummer stimmt nicht mit unseren Unterlagen überein.',
+    'user_not_found' => 'Benutzer nicht gefunden.',
+    'invalid_input' => 'Ungültige Eingabe.',
+    'attributes' => [
+        'mobile' => 'Mobilnummer',
+        'country_code' => 'Ländercode',
+        'password' => 'Passwort',
+        'shop_type' => 'Shop-Typ',
+        'sms_type' => 'SMS-Typ',
+        'otp' => 'OTP',
+        'type' => 'Anforderungstyp',
+        'user_id' => 'Benutzer-ID',
+    ],
+];

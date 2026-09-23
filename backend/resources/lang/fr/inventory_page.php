@@ -1,0 +1,28 @@
+<?php
+
+    return [
+        'Add Inventory'=>'Add Inventory',  
+        'Inventory'=>'Inventory',  
+        'Download Data'=>'Download Data',  
+        'Upload Data'=>'Upload Data',  
+        'How to upload inventory data in CSV or XLS format?'=>'How to upload inventory data in CSV or XLS format?',  
+        'Stock Quantity'=>'Stock Quantity',  
+        'Minimum Stock Alert'=>'Minimum Stock Alert',  
+        'Unit'=>'Unit',  
+        'Select Unit'=>'Select Unit',  
+        'HSN/ SAC Code'=>'HSN/ SAC Code',  
+        'MRP'=>'MRP',  
+        'Rate'=> 'Rate',  
+        'Price'=> 'Price',  
+        'Tax'=> 'Tax',  
+        'Select Tax'=> 'Select Tax',  
+        'Stock' => 'Stock',
+        'View & Update Inventory' => 'View & Update Inventory',
+        'Are you sure you want to do the action ?' => 'Are you sure you want to do the action ?',
+        'Once deleted, this item will be permanently deleted.' => 'Once deleted, this item will be permanently deleted.',
+        'Click Confirm to proceed.' => 'Click Confirm to proceed.',
+        'View Details' => 'View Details',
+        'Item Details' => 'Item Details',
+        'Fields marked with a star (*) are mandatory' => 'Fields marked with a star (*) are mandatory',
+        
+    ];

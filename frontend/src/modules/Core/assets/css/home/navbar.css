@@ -1,0 +1,47 @@
+/* Navbar Styles */
+.readybill-navbar {
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.rb-logo-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.rb-nav-link {
+  color: #64748b;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+}
+
+.rb-nav-link:hover {
+  color: #0d6efd;
+}
+
+.rb-login-btn {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.rb-login-btn:hover {
+  color: #0d6efd;
+}
+
+/* Mobile Responsive */
+@media (max-width: 991px) {
+  .navbar-nav {
+    margin-top: 1rem;
+  }
+  
+  .rb-nav-actions {
+    margin-top: 1rem;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .rb-nav-actions .btn {
+    width: 100%;
+  }
+}

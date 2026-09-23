@@ -1,0 +1,278 @@
+// ------------------------------------------------------- COUNTRY CODE ------------------------------------------------------
+// let apiUrl = "/api/countries-json"; // Laravel API route to get country list
+let apiUrl = api_url;
+let countryOptions = [];
+let countryMap = {}; // Store countries with their short codes
+let countryCurrenyMap = {};
+let countrySeperatorMap = {};
+
+// ========= Helpers for matching =========
+function normalize(s) { return (s || '').toString().toLowerCase().trim(); } // per Select2 matching pipeline [web:3]
+function wordStartsWith(text, term) {
+    const t = normalize(text), q = normalize(term);
+    if (!q) return true;
+    const re = new RegExp(`(?:^|[\\s\\-\\(\\)])${q.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}`);
+    return re.test(t);
+} // allow matches from word boundaries [web:3]
+
+function countryMatcher(params, data) {
+    const term = (params.term || '').trim();
+    if (!term) return data;
+    if (!data || typeof data.text === 'undefined') return null;
+
+    const isNum = /^[0-9+]+$/.test(term);
+    const text = data.text || '';
+    const dial = (data['data-dial_code'] || data.shortText || '').replace('+', '');
+
+    if (isNum) {
+        const q = term.replace('+', '');
+        return dial && dial.startsWith(q) ? data : null;
+    } else {
+        const t = normalize(text), q = normalize(term);
+        return (t.startsWith(q) || wordStartsWith(text, term)) ? data : null;
+    }
+} // documented matcher API usage [web:3]
+
+// ========= Stable hidden-search adapter (keeps input in DOM, visually hidden) =========
+const Utils = $.fn.select2.amd.require('select2/utils');
+const Dropdown = $.fn.select2.amd.require('select2/dropdown');
+const DropdownSearch = $.fn.select2.amd.require('select2/dropdown/search');
+const AttachBody = $.fn.select2.amd.require('select2/dropdown/attachBody');
+
+const NoVisibleSearchDropdown = Utils.Decorate(Utils.Decorate(Dropdown, DropdownSearch), AttachBody); // official adapter composition [web:71]
+NoVisibleSearchDropdown.prototype.render = (function (original) {
+    return function () {
+        const $rendered = original.call(this);
+        const $searchWrap = $rendered.find('.select2-search--dropdown');
+        if ($searchWrap.length) {
+            // Visually hide without display:none to avoid focus/blur close [web:41]
+            $searchWrap.css({
+                position: 'absolute',
+                height: '1px',
+                width: '1px',
+                overflow: 'hidden',
+                clip: 'rect(1px, 1px, 1px, 1px)',
+                whiteSpace: 'nowrap'
+            });
+        }
+        return $rendered;
+    };
+})(NoVisibleSearchDropdown.prototype.render); // adapter override to keep search stable [web:71][web:41]
+
+// // X-API-KEY-SECRET
+// var x_api_key_secret = "...";
+// // X-API-KEY-SECRET
+
+$.ajax({
+    url: apiUrl + "countries-json",
+    type: "GET",
+    headers: {
+        "X-API-Secret": '"' + x_api_key_secret + '"',
+    },
+    dataType: "json",
+    success: function (countries) {
+        let countryDropdown = $(".countryCode");
+
+        // Sort countries alphabetically by name
+        countries.sort((a, b) => a.name.localeCompare(b.name)); // stable UX ordering [web:41]
+
+        countries.forEach(country => {
+            let countryName = country.name;
+            let countryCode = country.code; // ISO Alpha-2 code (e.g., IN, US)
+            let dialCode = country.dial_code;
+            let currency_symbol = country.currency_symbol;
+            let decimal_separator = country.decimal_separator;
+            let flagUrl = country.flag;
+
+            if (dialCode) { // Only include countries with a dial code
+                countryOptions.push({
+                    id: countryCode,
+                    text: `${countryName} (${dialCode})`,
+                    flag: flagUrl,
+                    shortText: `${dialCode}`,
+                    'data-dial_code': dialCode,
+                });
+
+                countryMap[countryCode] = dialCode; // Map country short name to dial code
+                countryCurrenyMap[countryCode] = currency_symbol;
+                countrySeperatorMap[countryCode] = decimal_separator;
+            }
+        });
+
+        // Initialize Select2 with matcher and stable hidden search
+        countryDropdown.select2({
+            data: countryOptions,
+            templateResult: formatCountryList, // List view: Flag + Full name + Code
+            templateSelection: formatSelectedCountry, // Selected view: Flag + Code only
+            matcher: countryMatcher, // filter by name/dial code while typing [web:3]
+            dropdownAdapter: NoVisibleSearchDropdown, // keep search input in DOM (visually hidden) [web:71]
+            minimumResultsForSearch: -1, // hide search UI without Infinity glitches [web:22]
+            closeOnSelect: false, // keep open while user types/selects [web:37]
+            width: 'auto',
+            dropdownParent: $('.select2-dropdown-container') // visible ancestor to avoid blur [web:41]
+        });
+
+        // OPTIONAL: apply data attributes on options
+        countryOptions.forEach(opt => {
+            let $option = countryDropdown.find(`option[value="${opt.id}"]`);
+            if ($option.length) {
+                $option.attr('data-dial_code', opt['data-dial_code']);
+            }
+        });
+
+        // ============ Type-to-filter without visible search ============
+        let typeBuffer = '';
+        let typeTimer = null;
+        const RESET_DELAY = 600; // user-friendly debounce [web:3]
+
+        function getSearchInput() {
+            return $('.select2-container--open .select2-search__field'); // exists via adapter [web:71]
+        }
+
+        function stabilizeOpenState() {
+            const $cont = $('.select2-container--open');
+            if (!$cont.length) return;
+            const $first = $cont.find('.select2-results__option[aria-selected]').filter(':visible').first();
+            if ($first.length) $first.trigger('mouseenter'); // keep a row highlighted to retain keyboard focus [web:40]
+            $cont.find('.select2-selection').trigger('focus'); // refocus visible selection to avoid close [web:41]
+        }
+
+        function refreshFilter() {
+            if (!$('.select2-container--open').length) countryDropdown.select2('open'); // menu must be open to render [web:37]
+            const $input = getSearchInput();
+            $input.val(typeBuffer).trigger('input'); // update params.term → matcher runs [web:68]
+            stabilizeOpenState(); // hold open with focus retained [web:41]
+        }
+
+        // Open on focus/keydown so typing applies immediately
+        countryDropdown.on('focus', function () { $(this).select2('open'); }); // open on focus for faster UX [web:37]
+        countryDropdown.on('keydown', function () {
+            if (!$('.select2-container--open').length) $(this).select2('open'); // ensure open before typing [web:37]
+        });
+
+        // Capture typing on the visible selection
+        $(document).on('keydown', '.select2-container--open .select2-selection', function (e) {
+            if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Tab'].includes(e.key)) return;
+
+            if (e.key === 'Backspace') {
+                typeBuffer = typeBuffer.slice(0, -1);
+            } else if (e.key.length === 1 && /[a-zA-Z0-9+ ]/.test(e.key)) {
+                typeBuffer += e.key;
+            } else {
+                return;
+            }
+
+            refreshFilter();
+
+            clearTimeout(typeTimer);
+            typeTimer = setTimeout(() => { typeBuffer = ''; refreshFilter(); }, RESET_DELAY);
+        });
+
+        // Prevent blur/close during results refresh interaction
+        $(document).on('mousedown', '.select2-container--open .select2-results', function (e) {
+            e.preventDefault(); // swallow mousedown so focus stays inside widget [web:41]
+        });
+
+        // Modal-like hold: block outside clicks until explicit close
+        let blockOutsideUntilClose = false;
+        function enableModalLikeBehavior() {
+            blockOutsideUntilClose = true;
+            $(document).on('mousedown.select2Hold', function (e) {
+                const $open = $('.select2-container--open');
+                if ($open.length && blockOutsideUntilClose) {
+                    const inside = $(e.target).closest('.select2-container').length || $(e.target).closest('.select2-dropdown').length;
+                    if (!inside) {
+                        e.preventDefault(); // prevent blur collapse from outside click [web:41]
+                        e.stopImmediatePropagation();
+                    }
+                }
+            });
+        }
+        function disableModalLikeBehavior() {
+            blockOutsideUntilClose = false;
+            $(document).off('mousedown.select2Hold'); // release trap on close [web:41]
+        }
+        countryDropdown.on('select2:open', enableModalLikeBehavior); // trap focus/clicks while open [web:41]
+        countryDropdown.on('select2:close', disableModalLikeBehavior); // restore normal behavior after close [web:41]
+
+        // Re-open and restore last query if closed accidentally while typing
+        let lastTerm = '';
+        $(document).on('input', '.select2-container--open .select2-search__field', function () {
+            lastTerm = $(this).val(); // keep last params.term to restore [web:68]
+        });
+        $(document).on('keydown', function (e) {
+            const isTypingKey = (e.key.length === 1 && /[a-zA-Z0-9+ ]/.test(e.key)) || e.key === 'Backspace';
+            if (!$('.select2-container--open').length && isTypingKey) {
+                const $sel = $('.countryCode');
+                $sel.select2('open'); // documented open method [web:37]
+                const $input = $('.select2-container--open .select2-search__field');
+                let term = lastTerm || '';
+                if (e.key === 'Backspace') term = term.slice(0, -1); else if (e.key.length === 1) term += e.key;
+                $input.val(term).trigger('input'); // filter again using matcher [web:68]
+                $('.select2-container--open .select2-selection').trigger('focus'); // hold focus [web:41]
+                e.preventDefault();
+            }
+        });
+
+        // Close only on explicit selection or Escape for user control
+        countryDropdown.on('select2:select', function () {
+            $(this).select2('close'); // documented close method [web:37]
+            typeBuffer = ''; // reset buffer after commit [web:3]
+        });
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape' && $('.select2-container--open').length) {
+                countryDropdown.select2('close'); // explicit close on ESC [web:37]
+                disableModalLikeBehavior(); // release modal-like trap [web:41]
+            }
+        });
+        // ============ End type-to-filter additions ============
+    },
+    error: function () {
+        // alert("Failed to load country data.");
+    }
+});
+
+// Function to format the dropdown list (flag + full country name + dial code)
+function formatCountryList(country) {
+    if (!country.id) return country.text;
+    let flag = country.flag;
+    return $(`<span class="select2-option">${flag} ${country.text}</span>`);
+}
+
+// Function to format the selected option (flag + country code only)
+function formatSelectedCountry(country) {
+    if (!country.id) return country.text;
+    let flag = country.flag;
+    return $(`<div>${flag} ${country.shortText}</div>`);
+}
+
+// Update input field placeholder when country code is selected
+$(".countryCode").on("change", function () {
+    let selectedCode = $(this).val();
+    $("#mobile").attr("placeholder", "Enter your mobile number");
+});
+// ------------------------------------------------------- COUNTRY CODE ------------------------------------------------------
+
+function getCountryCode() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: apiUrl + 'country-code',
+            type: 'GET',
+            headers: {
+                "X-API-Secret": '"' + x_api_key_secret + '"',
+            },
+            beforeSend: function () {
+                $('.overlay').show();
+            },
+            success: function (response) {
+                resolve(response); // Resolve the Promise with the data
+                $('.overlay').hide();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                $('.overlay').hide();
+                reject(error); // Reject the Promise with the error
+            }
+        });
+    });
+}

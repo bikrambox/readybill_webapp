@@ -1,0 +1,313 @@
+/* Footer Styles */
+
+.rb-mobile-app-section{
+  background: #F9FAFB;
+}
+
+.rb-footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.rb-footer-logo-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.rb-footer-description {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.rb-footer-heading {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.rb-footer-list {
+  margin: 0;
+  padding: 0;
+}
+
+.rb-footer-link {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.rb-footer-link:hover {
+  color: #ffffff;
+}
+
+.rb-footer-link-primary {
+  color: #0d6efd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.rb-footer-link-primary:hover {
+  color: #0b5ed7;
+  text-decoration: underline;
+}
+
+/* Increased Divider Size */
+.rb-footer-divider {
+  border-width: 2px !important;
+  opacity: 0.3;
+}
+
+/* Footer Bottom Section */
+.rb-footer-bottom {
+  min-height: 50px;
+}
+
+.rb-copyright {
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+}
+
+/* Footer Badges - Smaller Size */
+.rb-footer-badge {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.rb-footer-badge img {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.rb-footer-badge:hover {
+  transform: scale(1.05);
+}
+
+/* Divider between logos */
+.rb-divider {
+  font-size: 1.2rem;
+  font-weight: 300;
+}
+
+/* Social Icons - Smaller Size */
+.rb-social-icons {
+  gap: 0.5rem;
+}
+
+.rb-social-icon-link {
+  display: inline-block;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.rb-social-icon-link:hover {
+  transform: translateY(-2px);
+}
+
+.rb-social-icon-badge {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.452);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.rb-social-icon-badge:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.rb-social-icon-badge img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.rb-footer-logos {
+  flex-wrap: nowrap;
+}
+
+/* Desktop Responsive */
+@media (min-width: 768px) {
+  .rb-footer-bottom {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .rb-footer {
+    padding: 3rem 0 !important;
+  }
+  
+  .rb-footer-heading {
+    font-size: 0.95rem;
+  }
+  
+  .rb-footer-link {
+    font-size: 0.85rem;
+  }
+  
+  .rb-copyright {
+    font-size: 0.75rem;
+    margin-top: 1rem !important;
+  }
+  
+  /* Mobile Layout: 
+     - Left: Logos
+     - Right: Social Icons
+     - Bottom Center: Copyright 
+  */
+  .rb-footer-bottom {
+    position: relative;
+  }
+  
+  /* Logos on left */
+  .rb-footer-bottom .order-1 {
+    padding-left: 0;
+  }
+  
+  /* Social icons on right */
+  .rb-footer-bottom .order-2 {
+    padding-right: 0;
+  }
+  
+  /* Copyright text centered below */
+  .rb-footer-bottom .order-3 {
+    width: 100%;
+    text-align: center !important;
+  }
+  
+  /* Smaller logos on mobile */
+  .rb-footer-badge img {
+    height: 20px;
+  }
+  
+  /* Smaller social icons on mobile */
+  .rb-social-icon-badge {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .rb-social-icon-badge img {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Adjust gap for mobile */
+  .rb-footer-logos {
+    gap: 0.5rem !important;
+  }
+  
+  .rb-social-icons {
+    gap: 0.4rem;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .rb-footer {
+    padding: 3rem 0 !important;
+  }
+  
+  .rb-footer-heading {
+    font-size: 0.95rem;
+  }
+  
+  .rb-footer-link {
+    font-size: 0.85rem;
+  }
+  
+  .rb-copyright {
+    font-size: 0.75rem;
+    margin-top: 1rem !important;
+  }
+  
+  /* Mobile Layout with proper spacing from edges */
+  .rb-footer-bottom {
+    position: relative;
+    padding: 0 1rem; /* Add horizontal padding to container */
+  }
+  
+  /* Logos on left with spacing from left edge */
+  .rb-footer-bottom .order-1 {
+    padding-left: 0.5rem;
+  }
+  
+  /* Social icons on right with spacing from right edge */
+  .rb-footer-bottom .order-2 {
+    padding-right: 0.5rem;
+  }
+  
+  /* Copyright text centered below */
+  .rb-footer-bottom .order-3 {
+    width: 100%;
+    text-align: center !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Smaller logos on mobile */
+  .rb-footer-badge img {
+    height: 20px;
+  }
+  
+  /* Smaller social icons on mobile */
+  .rb-social-icon-badge {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .rb-social-icon-badge img {
+    width: 16px;
+    height: 16px;
+  }
+  
+  /* Adjust gap for mobile */
+  .rb-footer-logos {
+    gap: 0.5rem !important;
+  }
+  
+  .rb-social-icons {
+    gap: 0.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Extra spacing for very small screens */
+  .rb-footer-bottom {
+    padding: 0 0.75rem;
+  }
+  
+  .rb-footer-bottom .order-1 {
+    padding-left: 0.25rem;
+  }
+  
+  .rb-footer-bottom .order-2 {
+    padding-right: 0.25rem;
+  }
+  
+  .rb-footer-badge img {
+    height: 18px;
+  }
+  
+  .rb-social-icon-badge {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .rb-social-icon-badge img {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .rb-copyright {
+    font-size: 0.7rem;
+  }
+}

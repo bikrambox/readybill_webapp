@@ -1,0 +1,239 @@
+// ------------------------------------------------------- COUNTRY CODE ------------------------------------------------------
+// let apiUrl = "/api/countries-json"; // Laravel API route to get country list
+let apiUrl = api_url;
+let countryOptions = [];
+let countryMap = {}; // Store countries with their short codes
+let countryCurrenyMap = {};
+let countrySeperatorMap = {};
+
+let searchTerm = '';
+let searchTimeout;
+
+// // X-API-KEY-SECRET
+// var x_api_key_secret = "eyJpdiI6IklobHR5dk80RC96cktsOGN3elV4cHc9PSIsInZhbHVlIjoiai9PV2pGMmxlT083bUJmYVVXY3ZldjZSMnViUW1TV2tiSVpNN3U0SXR3YkFac2FweUlrZUNRNFp0QUs5bUJaWSIsIm1hYyI6IjE3OWVjNTYzNGI5NTQ3MDUyM2I5MWM5NWJjNGQ3M2RjOTUzMjg4MTFhNDcxYjYxZjg2MWRjZDBjYmYyNjYyNGQiLCJ0YWciOiIifQ==";
+// // X-API-KEY-SECRET
+
+// console.log('countryDropdown.js', api_url);
+
+$.ajax({
+    url: apiUrl + "countries-json",
+    type: "GET",
+    headers: {
+        "X-API-Secret": '"' + x_api_key_secret + '"',
+    },
+    dataType: "json",
+    success: function (countries) {
+        let countryDropdown = $(".countryCode");
+
+        console.log('countries', countries);
+
+        // Sort countries alphabetically by name
+        countries.sort((a, b) => a.name.localeCompare(b.name));
+
+        countries.forEach(country => {
+            let countryName = country.name;
+            let countryCode = country.code; // ISO Alpha-2 code (e.g., IN, US)
+            let dialCode = country.dial_code;
+            let currency_symbol = country.currency_symbol;
+            let decimal_separator = country.decimal_separator;
+            let flagUrl = country.flag;
+
+            if (dialCode) { // Only include countries with a dial code
+                countryOptions.push({
+                    id: countryCode,
+                    text: `${countryName} (${dialCode})`,
+                    name: countryName.toLowerCase(), // For faster matching
+                    dialCode: dialCode,
+                    flag: flagUrl,
+                    shortText: `${dialCode}`,
+                    'data-dial_code': dialCode,
+                });
+
+                countryMap[countryCode] = dialCode; // Map country short name to dial code
+                countryCurrenyMap[countryCode] = currency_symbol;
+                countrySeperatorMap[countryCode] = decimal_separator;
+            }
+        });
+
+        // Initialize Select2 WITHOUT searchbox
+        countryDropdown.select2({
+            data: countryOptions,
+            templateResult: formatCountryList, // List view: Flag + Full name + Code
+            templateSelection: formatSelectedCountry, // Selected view: Flag + Code only
+            minimumResultsForSearch: -1, // Disable search box completely
+            width: 'auto', // Keeps the selected option compact
+            dropdownParent: $("body"), // Ensures dropdown is not clipped inside small containers
+            closeOnSelect: true, // Close dropdown after selection
+        });
+
+
+
+        // on type keywords
+        countryDropdown.on('select2:open', function () {
+            searchTerm = '';
+
+            // Remove any existing event listeners first
+            $(document).off('keydown.select2Filter');
+
+            // Add visual indicator for typed search term
+            let $resultsContainer = $('.select2-results__options').parent();
+            if (!$resultsContainer.find('.search-indicator').length) {
+                $resultsContainer.prepend('<div class="search-indicator" style="display:none; padding: 8px 12px; background: #f0f0f0; border-bottom: 1px solid #ddd; font-size: 13px; color: #666;"><strong>Typing:</strong> <span class="search-term"></span></div>');
+            }
+
+            $(document).on('keydown.select2Filter', function (e) {
+                // Only handle alphanumeric keys and special characters
+                if (e.key.length === 1 && /[a-zA-Z0-9+\s]/.test(e.key)) {
+                    searchTerm += e.key.toLowerCase();
+
+                    // Clear existing timeout
+                    clearTimeout(searchTimeout);
+
+                    // Show visual indicator
+                    $('.search-indicator').show().find('.search-term').text(searchTerm);
+
+                    // Find first matching option
+                    let $results = $('.select2-results__option');
+                    let matchFound = false;
+
+                    $results.each(function () {
+                        let optionText = $(this).text().toLowerCase();
+
+                        if (optionText.includes(searchTerm) && !matchFound) {
+                            // Highlight the matching option
+                            $results.removeClass('select2-results__option--highlighted');
+                            $(this).addClass('select2-results__option--highlighted');
+
+                            // Scroll to the matching option smoothly
+                            let $resultsContainer = $('.select2-results__options');
+                            let optionTop = $(this).position().top;
+                            let containerScrollTop = $resultsContainer.scrollTop();
+                            let containerHeight = $resultsContainer.height();
+
+                            let scrollTo = containerScrollTop + optionTop - (containerHeight / 3);
+                            $resultsContainer.animate({ scrollTop: scrollTo }, 200);
+
+                            matchFound = true;
+                            return false;
+                        }
+                    });
+
+                    // If no match found, show message
+                    if (!matchFound) {
+                        $('.search-term').html(searchTerm + ' <span style="color: #d9534f;">(no match)</span>');
+                    }
+
+                    // Auto-clear search term after 1.5 seconds of inactivity
+                    searchTimeout = setTimeout(function () {
+                        searchTerm = '';
+                        $('.search-indicator').fadeOut(300);
+                    }, 1500);
+
+                    e.preventDefault();
+                }
+
+                // Handle Backspace
+                if (e.key === 'Backspace' && searchTerm.length > 0) {
+                    searchTerm = searchTerm.slice(0, -1);
+
+                    clearTimeout(searchTimeout);
+
+                    if (searchTerm.length === 0) {
+                        $('.search-indicator').fadeOut(200);
+                    } else {
+                        $('.search-term').text(searchTerm);
+
+                        // Auto-clear after inactivity
+                        searchTimeout = setTimeout(function () {
+                            searchTerm = '';
+                            $('.search-indicator').fadeOut(300);
+                        }, 1500);
+                    }
+
+                    e.preventDefault();
+                }
+
+                // Handle Escape to clear search
+                if (e.key === 'Escape' && searchTerm.length > 0) {
+                    searchTerm = '';
+                    $('.search-indicator').fadeOut(200);
+                    e.stopPropagation(); // Prevent closing dropdown
+                }
+            });
+        });
+
+        // Clean up when dropdown closes
+        countryDropdown.on('select2:close', function () {
+            $(document).off('keydown.select2Filter');
+            searchTerm = '';
+            clearTimeout(searchTimeout);
+            $('.search-indicator').remove(); // Clean up indicator
+        });
+
+        // on type keywords
+
+
+
+
+        // OPTIONAL: Apply data attributes to the actual <option> tags
+        countryOptions.forEach(opt => {
+            let $option = countryDropdown.find(`option[value="${opt.id}"]`);
+            if ($option.length) {
+                $option.attr('data-dial_code', opt['data-dial_code']);
+            }
+        });
+
+    },
+    error: function () {
+        console.error("Failed to load country data.");
+        // alert("Failed to load country data.");
+    }
+});
+
+// Function to format the dropdown list (flag + full country name + dial code)
+function formatCountryList(country) {
+    if (!country.id) return country.text;
+
+    let flag = country.flag;
+    return $(`<span class="select2-option d-flex align-items-center">${flag} ${country.text}</span>`);
+}
+
+// Function to format the selected option (flag + country code only)
+function formatSelectedCountry(country) {
+    if (!country.id) return country.text;
+
+    let flag = country.flag;
+    return $(`<div class="d-flex align-items-center">${flag} ${country.shortText}</div>`);
+}
+
+// Update input field placeholder when country code is selected
+$(".countryCode").on("change", function () {
+    let selectedCode = $(this).val();
+    $("#mobile").attr("placeholder", "Enter your mobile number");
+});
+
+function getCountryCode() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: apiUrl + 'country-code',
+            type: 'GET',
+            headers: {
+                "X-API-Secret": '"' + x_api_key_secret + '"',
+            },
+            beforeSend: function () {
+                $('.overlay').show();
+            },
+            success: function (response) {
+                resolve(response); // Resolve the Promise with the data
+                $('.overlay').hide();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                $('.overlay').hide();
+                reject(error); // Reject the Promise with the error
+            }
+        });
+    });
+}
+
+// ------------------------------------------------------- COUNTRY CODE ------------------------------------------------------

@@ -1,0 +1,14 @@
+[
+    {
+        "name": "USA",
+        "flag": "🇺🇸",
+        "code": "US",
+        "dial_code": "+1",
+        "currency": "US Dollar",
+        "currency_symbol": "$",
+        "decimal_separator": ".",
+        "national_language": "English",
+        "language_short_code": "en",
+        "region": "usa"
+    }
+]
